@@ -1,0 +1,44 @@
+# Rust Ollama Configuration
+
+[server]
+host = "127.0.0.1"
+port = 11434
+max_connections = 100
+request_timeout = 300
+
+[storage]
+database_path = "./ollama.db"
+models_directory = "./models"
+max_model_size_gb = 10
+auto_cleanup = true
+
+[inference]
+default_temperature = 0.8
+default_top_p = 0.9
+default_top_k = 40
+default_max_tokens = 512
+default_repeat_penalty = 1.1
+
+[models]
+default_models = ["llama3.2", "mistral"]
+preferred_quantization = "Q4_0"
+context_length = 4096
+max_concurrent_requests = 4
+
+[logging]
+level = "info"
+format = "json"
+file = "./logs/ollama.log"
+max_file_size_mb = 100
+max_files = 5
+
+[performance]
+enable_caching = true
+cache_size_mb = 512
+enable_metrics = true
+gpu_memory_fraction = 0.8
+
+[api]
+enable_cors = true
+rate_limit_per_minute = 60
+max_request_size_mb = 10

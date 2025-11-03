@@ -1,17 +1,59 @@
-# Rust Ollama - A Modular LLM Inference Server
+# Rust Ollama Enhanced v0.2.0 🚀
 
-A high-performance, modular LLM inference server built in Rust, designed to be a drop-in replacement for Ollama with enhanced architecture and performance.
+A **high-performance, modular LLM inference server** built in Rust with **WebSocket support**, **real-time monitoring**, **model fine-tuning**, and **interactive TUI** - designed as an enhanced drop-in replacement for Ollama.
 
-## 🌟 Features
+## 🌟 Enhanced Features
 
-- **Modular Architecture**: Clean separation of concerns with distinct modules for database, inference, model management, and API
-- **SQLite Database**: Robust metadata storage with ACID transactions and efficient queries
-- **Candle-Powered Inference**: Leverages Hugging Face's Candle framework for high-performance LLM inference
-- **GGUF Model Support**: Full support for quantized GGUF models (Q4_0, Q8_0, etc.)
-- **RESTful API**: Ollama-compatible REST API for seamless integration
-- **CLI Interface**: Complete command-line interface matching Ollama's functionality
-- **Cross-Platform**: Supports Linux, macOS, and Windows
-- **GPU Acceleration**: CUDA and Metal support for enhanced performance
+### Core Infrastructure
+- **Modular Architecture**: Clean separation with database, inference, model management, API, monitoring modules
+- **SQLite Database**: Robust metadata storage with ACID transactions and performance metrics
+- **Candle-Powered Inference**: High-performance LLM inference with Hugging Face's Candle framework
+- **GGUF Model Support**: Full support for quantized models with intelligent caching
+
+### 🚀 **NEW**: WebSocket & Real-time Features
+- **WebSocket Support**: Real-time chat and streaming responses
+- **Server-Sent Events**: Enhanced streaming for API responses
+- **Live Monitoring**: Real-time connection and performance tracking
+- **Interactive Sessions**: Persistent chat sessions with context
+
+### 📊 **NEW**: Advanced Monitoring & Metrics
+- **Prometheus Metrics**: Comprehensive performance monitoring
+- **Real-time Dashboards**: Interactive TUI for system management
+- **Performance Analytics**: Request timing, error rates, throughput analysis
+- **Resource Monitoring**: Memory usage, CPU utilization, cache statistics
+- **OpenTelemetry Integration**: Distributed tracing and observability
+
+### 🧠 **NEW**: Enhanced Inference Engine
+- **Intelligent Caching**: LRU-based model caching with memory pressure detection
+- **Batch Processing**: Optimize inference for multiple requests
+- **Model Preloading**: Predictive model loading based on usage patterns
+- **Enhanced Streaming**: Better response streaming with chunk management
+- **Embeddings Generation**: Built-in text embedding capabilities
+
+### 🎯 **NEW**: Model Fine-tuning & Training
+- **Custom Training**: Fine-tune models with your own data
+- **LoRA Support**: Parameter-efficient fine-tuning
+- **Training Analytics**: Loss tracking and validation metrics
+- **Model Merging**: Combine base models with fine-tuned adapters
+
+### 🖼️ **NEW**: Interactive TUI
+- **Real-time Dashboard**: Monitor system performance and model status
+- **Interactive Management**: Start/stop models, view logs, configure settings
+- **Performance Visualization**: Charts and gauges for resource usage
+- **Model Browser**: Browse and manage local models with details
+
+### ⚡ **NEW**: Advanced Testing & Benchmarking
+- **Stress Testing**: Comprehensive load testing and performance evaluation
+- **Benchmarking Suite**: Automated performance testing with detailed reports
+- **Response Time Analysis**: P50, P95, P99 latency metrics
+- **Error Rate Monitoring**: Detailed error tracking and analysis
+
+### 🌐 Enhanced API
+- **Ollama Compatibility**: Drop-in replacement with enhanced features
+- **Rate Limiting**: Configurable request throttling
+- **CORS Support**: Cross-origin resource sharing configuration
+- **API Documentation**: Comprehensive OpenAPI specification
+- **Batch Endpoints**: Process multiple requests efficiently
 
 ## 🚀 Quick Start
 
@@ -24,16 +66,37 @@ A high-performance, modular LLM inference server built in Rust, designed to be a
    cargo build --release
    ```
 
-2. **Start the server**:
+2. **Start the enhanced server**:
    ```bash
-   ./target/release/rust_ollama serve --port 11434
+   ./target/release/rust_ollama serve --port 11434 --monitoring --websocket
    ```
 
-3. **Use the CLI**:
+3. **Use the enhanced CLI**:
    ```bash
    ./target/release/ollama_cli list
    ./target/release/ollama_cli pull llama3.2
    ./target/release/ollama_cli run llama3.2 "Explain quantum computing"
+   ```
+
+4. **Interactive TUI** (NEW!):
+   ```bash
+   ./target/release/ollama_tui --server-url http://localhost:11434
+   ```
+
+5. **View metrics** (NEW!):
+   ```bash
+   curl http://localhost:9090/metrics
+   curl http://localhost:11434/api/metrics
+   ```
+
+6. **Run stress tests** (NEW!):
+   ```bash
+   ./target/release/stress_test --server-url http://localhost:11434 --workers 20 --rps 10
+   ```
+
+7. **Fine-tune models** (NEW!):
+   ```bash
+   ./target/release/model_finetuner --model llama3.2 --data training_data.jsonl --output my_model
    ```
 
 ## 📖 Architecture
@@ -84,27 +147,59 @@ The SQLite database stores:
 - `GET /api/version` - Server version
 - `GET /health` - Health check
 
-## 🛠️ CLI Commands
+## 🛠️ Enhanced CLI Commands
 
+### Core Server Commands
 ```bash
-# Start the server
-rust_ollama serve --port 11434 --models-dir ./models
+# Start enhanced server
+rust_ollama serve --port 11434 --models-dir ./models --monitoring --websocket
+rust_ollama serve --port 11434 --cli  # Use CLI mode
+rust_ollama serve --port 11434 --tui  # Use TUI mode
+```
 
-# Model management
-ollama_cli list              # List local models
+### Enhanced Model Management
+```bash
+ollama_cli list              # List local models with stats
 ollama_cli pull llama3.2     # Pull a model
 ollama_cli rm llama3.2       # Remove a model
 ollama_cli cp llama3.2 custom # Copy a model
-ollama_cli show llama3.2     # Show model details
+ollama_cli show llama3.2     # Show detailed model info
+ollama_cli preload llama3.2  # Preload model for faster access
+```
 
-# Runtime operations
-ollama_cli ps                # List running models
+### Runtime Operations
+```bash
+ollama_cli ps                # List running models with metrics
 ollama_cli stop llama3.2     # Stop a model
 ollama_cli run llama3.2 "Hello" # Run model interactively
+ollama_cli chat --model llama3.2 --stream # Enhanced streaming chat
+ollama_cli embed --model llama3.2 "text to embed" # Generate embeddings
+```
 
-# Direct inference
-ollama_cli generate --model llama3.2 "Explain AI" --format json
-ollama_cli chat --model llama3.2 --stream
+### Enhanced Direct Inference
+```bash
+ollama_cli generate --model llama3.2 "Explain AI" --format json --stream
+ollama_cli generate --model llama3.2 "Generate embeddings" --embeddings-only
+ollama_cli batch-generate --prompt-file prompts.txt --model llama3.2
+```
+
+### Interactive TUI (NEW!)
+```bash
+ollama_tui --server-url http://localhost:11434 --refresh-interval 2
+```
+
+### Stress Testing & Benchmarking (NEW!)
+```bash
+stress_test --server-url http://localhost:11434 --workers 20 --rps 10 --duration 60
+stress_test --server-url http://localhost:11434 --test-type chat --model mistral
+stress_test --server-url http://localhost:11434 --output results.json
+```
+
+### Model Fine-tuning (NEW!)
+```bash
+model_finetuner train --model llama3.2 --data training.jsonl --output fine_tuned
+model_finetuner evaluate --model fine_tuned --data test.jsonl
+model_finetuner sample --model llama3.2 --prompt "Hello world" --num-samples 5
 ```
 
 ## ⚙️ Configuration
